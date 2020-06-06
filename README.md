@@ -1,2 +1,22 @@
-# reading_circle_management
-describe how to manage reading circle
+# 読書会運営方法
+
+## 読書会自体の目的
+
+* 強制的にインプットする機会の提供
+* 疑問、意見をアウトプットしていく機会を提供
+
+## タイムスケジュール
+
+| 項目 | 時間(m) | 備考 |
+| :--- | ---: | :--- | 
+| オープニング | 10 | 目的の共有 |
+| 読書 | 20  | 課題本を読む(事前に読んでいる人は自由に) |
+| 意見交換 | 20 | 疑問点、不明点、経験の共有etc |
+| バッファ | 10 | |
+
+## 
+
+#　有益URL
+
+https://note.com/akikato/n/na14a7e9bfd2c
+https://inside.dmm.com/entry/2018/10/02/rindokukai
