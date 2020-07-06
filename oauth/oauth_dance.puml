@@ -1,0 +1,29 @@
+@startuml
+title OAuthダンス
+
+participant "リソース所有者" as ResourceOwner
+participant "クライアント" as Client
+
+participant "認可サーバー(認可エンドポイント)" as AuthorizationServer_authn
+participant "認可サーバー(トークンエンドポイント)" as AuthorizationServer_token
+participant "保護対象リソース" as ProtectedResource
+
+activate ResourceOwner
+activate Client
+activate AuthorizationServer_authn
+activate AuthorizationServer_token
+activate ProtectedResource
+
+ResourceOwner -> Client: クライアントが保護対象リソースから情報を取得できるようにする
+Client --> ResourceOwner: ①認可エンドポイントへにリダイレクト命令
+ResourceOwner -> AuthorizationServer_authn: ②認可エンドポイントにアクセス
+AuthorizationServer_authn --> ResourceOwner: 認可画面返却
+ResourceOwner -> AuthorizationServer_authn: ID,Password等を入力(認可サーバに対して自身の認証をする)
+AuthorizationServer_authn --> ResourceOwner: ③クライアントへのリダイレクト命令(with認可コード)
+ResourceOwner -> Client: ④クライアントにアクセス(with認可コード)
+Client -> AuthorizationServer_token: ⑤トークンエンドポイントにアクセス(with認可コード,クライアントクレデンシャル)
+AuthorizationServer_token --> Client: ⑥トークン
+Client -> ProtectedResource: リクエスト(withトークン)
+ProtectedResource --> Client: リソース
+
+@enduml
