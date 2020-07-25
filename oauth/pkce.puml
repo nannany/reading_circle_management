@@ -1,0 +1,33 @@
+@startuml
+title PKCE
+
+participant "リソース所有者" as ResourceOwner
+participant "クライアント" as Client
+
+participant "認可サーバー(認可エンドポイント)" as AuthorizationServer_authz
+participant "認可サーバー(トークンエンドポイント)" as AuthorizationServer_token
+participant "保護対象リソース" as ProtectedResource
+
+activate ResourceOwner
+activate Client
+activate AuthorizationServer_authz
+activate AuthorizationServer_token
+activate ProtectedResource
+
+ResourceOwner -> Client: クライアントが保護対象リソースから情報を取得できるようにする
+Client -> Client: code_verifierをSHA256でハッシュ化したcode_challengeを生成
+Client --> ResourceOwner: ①認可エンドポイントにリダイレクト命令
+ResourceOwner -> AuthorizationServer_authz: ②認可エンドポイントにアクセス
+AuthorizationServer_authz --> ResourceOwner: 認可画面返却
+ResourceOwner -> AuthorizationServer_authz: ID,Password等を入力(認可サーバに対して自身の認証をする)
+AuthorizationServer_authz -> AuthorizationServer_authz: code_challengeとcode_challenge_methodを記憶
+AuthorizationServer_authz --> ResourceOwner: ③クライアントへのリダイレクト命令(with認可コード)
+ResourceOwner -> Client: ④クライアントにアクセス(with認可コード)
+Client -> Client: 該当リソース所有者のcode_verifierを取り出す
+Client -> AuthorizationServer_token: ⑤トークンエンドポイントにアクセス(with認可コード,クライアントクレデンシャル,code_verifier)
+AuthorizationServer_authz -> AuthorizationServer_authz: code_challenge_method(code_verifier)==code_challenge　かチェック
+AuthorizationServer_token --> Client: ⑥トークン
+Client -> ProtectedResource: リクエスト(withトークン)
+ProtectedResource --> Client: リソース
+
+@enduml
