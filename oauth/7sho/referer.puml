@@ -1,0 +1,28 @@
+@startuml
+title Referer
+
+participant "攻撃者" as Attacker
+participant "攻撃者サーバ" as AttackerServer
+participant "リソース所有者" as ResourceOwner
+participant "クライアント" as Client
+participant "攻撃者の用意したページ(クライアント内)" as MaliciousClient
+participant "認可サーバー(認可エンドポイント)" as AuthorizationServer_authn
+
+activate Attacker
+activate AttackerServer
+activate ResourceOwner
+activate Client
+activate MaliciousClient
+activate AuthorizationServer_authn
+
+Attacker -> ResourceOwner: 指定のURIを踏むように誘導
+ResourceOwner -> AuthorizationServer_authn: ①攻撃者の作成したURIにアクセス
+AuthorizationServer_authn --> ResourceOwner: 認可画面返却
+ResourceOwner -> AuthorizationServer_authn: ID,Password等を入力(認可サーバに対して自身の認証をする)
+AuthorizationServer_authn --> ResourceOwner: ②攻撃者の用意したページへのリダイレクト命令(with認可コード)
+ResourceOwner -> MaliciousClient: ③攻撃者が用意したページにアクセス
+MaliciousClient -> AttackerServer: ④攻撃者が用意したサーバに通信を飛ばす
+AttackerServer -> AttackerServer: Refererから③の通信を取得し、認可コードを得る
+
+
+@enduml
