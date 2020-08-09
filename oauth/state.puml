@@ -1,0 +1,26 @@
+@startuml
+title OAuthダンス
+
+participant "攻撃者" as Attacker
+participant "リソース所有者" as ResourceOwner
+participant "クライアント" as Client
+
+participant "認可サーバー(認可エンドポイント)" as AuthorizationServer_authn
+
+activate Attacker
+activate ResourceOwner
+activate Client
+activate AuthorizationServer_authn
+
+Attacker -> Client: クライアントが保護対象リソースから情報を取得できるようにする
+Client -> Client: state,session_idを生成し、stateとsession_idを紐づける
+Client --> Attacker: ①認可エンドポイントへにリダイレクト命令
+Attacker -> AuthorizationServer_authn: ②認可エンドポイントにアクセス
+AuthorizationServer_authn --> Attacker: 認可画面返却
+Attacker -> AuthorizationServer_authn: ID,Password等を入力(認可サーバに対して自身の認証をする)
+AuthorizationServer_authn --> Attacker: ③クライアントへのリダイレクト命令(with認可コード)
+Attacker -> ResourceOwner: リダイレクト先に誘導する
+ResourceOwner -> Client: ④攻撃者に誘導されクライアントにアクセス
+Client -> Client: 送信されたstateとリソース所有者のセッションにあるstateが異なるためリジェクト
+
+@enduml
